@@ -1,0 +1,95 @@
+CREATE DATABASE SocialNetwork; //create database called "SocialNetwork" to use in the project
+
+USE socialnetwork;
+CREATE TABLE user_info(
+    email VARCHAR (50) NOT NULL,
+    password_user VARCHAR (10) NOT NULL,
+    about_me VARCHAR (500),
+    gender VARCHAR (1) NOT NULL,
+    hometown VARCHAR (50),
+    profile_pic VARCHAR (100) NOT NULL,
+    martial_status VARCHAR (1),
+    birthday date NOT NULL,
+    first_name VARCHAR (50) NOT NULL,
+    last_name VARCHAR (50) NOT NULL,
+    nickname VARCHAR (25),
+    PRIMARY KEY (email)
+    );
+	
+USE socialnetwork;
+CREATE TABLE user_phonenumber(
+    email VARCHAR (50) NOT NULL,
+    phonenumber INT (15),
+    PRIMARY KEY (email,phonenumber)
+    );
+	
+USE socialnetwork;
+Alter TABLE user_phonenumber ADD FOREIGN KEY (email) REFERENCES user_info (email) ON DELETE RESTRICT;
+
+USE socialnetwork;
+CREATE TABLE user_profile(
+    email VARCHAR (50) NOT NULL,
+    profile_id INT (3) NOT NULL,
+    PRIMARY KEY (email,profile_id)
+    );
+
+USE socialnetwork;
+Alter TABLE user_profile ADD FOREIGN KEY (email) REFERENCES user_info (email) ON DELETE RESTRICT;
+
+USE socialnetwork;
+CREATE TABLE posts(
+    email VARCHAR (50) NOT NULL,
+    post_id INT (3) NOT NULL,
+    likes_number INT (3),
+    caption VARCHAR (300) NOT NULL,
+    image VARCHAR (100) NOT NULL,
+    posted_time timestamp NOT NULL,
+    is_public VARCHAR (1) NOT NULL,
+    PRIMARY KEY (email,post_id)
+    );
+	
+USE socialnetwork;
+Alter TABLE posts ADD FOREIGN KEY (email) REFERENCES user_info (email) ON DELETE RESTRICT;
+
+USE socialnetwork;
+CREATE TABLE friends_with(
+    user1_email VARCHAR (50) NOT NULL,
+    user2_email VARCHAR (50) NOT NULL,
+    PRIMARY KEY (user1_email,user2_email)
+    );
+
+USE socialnetwork;
+Alter TABLE friends_with ADD FOREIGN KEY (user1_email) REFERENCES user_info (email) ON DELETE RESTRICT;
+
+USE socialnetwork;
+Alter TABLE friends_with ADD FOREIGN KEY (user2_email) REFERENCES user_info (email) ON DELETE RESTRICT;
+
+USE socialnetwork;
+CREATE TABLE comments_on(
+    user_email VARCHAR (50) NOT NULL,
+    poster_email VARCHAR (50) NOT NULL,
+    post_id INT (3) NOT NULL,
+    comment_content VARCHAR (500) NOT NULL,
+    nickname VARCHAR (25),
+    PRIMARY KEY (user_email,poster_email,post_id)
+    );
+
+USE socialnetwork;
+Alter TABLE comments_on ADD FOREIGN KEY (user_email) REFERENCES user_info (email) ON DELETE RESTRICT;
+
+USE socialnetwork;
+Alter TABLE comments_on ADD FOREIGN KEY (poster_email,post_id) REFERENCES posts (email,post_id) ON DELETE RESTRICT;
+
+USE socialnetwork;
+CREATE TABLE likes(
+    user_email VARCHAR (50) NOT NULL,
+    poster_email VARCHAR (50) NOT NULL,
+    post_id INT (3) NOT NULL,
+    PRIMARY KEY (user_email,poster_email,post_id)
+    );
+
+USE socialnetwork;
+Alter TABLE likes ADD FOREIGN KEY (user_email) REFERENCES user_info (email) ON DELETE RESTRICT;
+
+USE socialnetwork;
+Alter TABLE likes ADD FOREIGN KEY (poster_email,post_id) REFERENCES posts (email,post_id) ON DELETE RESTRICT;
